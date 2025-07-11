@@ -10,8 +10,8 @@ const customJestConfig: Config = {
   testEnvironment: 'jsdom',
   moduleNameMapper: {
     '\\.(css|scss|sass)$': 'identity-obj-proxy',
-    '^@/components/(.*)$': '<rootDir>/components/',
-    '^@/app/(.*)$': '<rootDir>/app/',
+    '^@/components/(.*)$': '<rootDir>/components/$1',
+    '^@/app/(.*)$': '<rootDir>/app/$1',
   },
   collectCoverage: true,
   coverageDirectory: 'coverage',
