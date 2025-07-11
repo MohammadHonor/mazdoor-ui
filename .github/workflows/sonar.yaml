@@ -1,0 +1,150 @@
+name: Code Quality
+
+on:
+  push:
+    branches:
+      - production
+      - feature-dev-2025
+      - feature-qa-2025
+  pull_request:
+    branches:
+      - production
+      - feature-dev-2025
+      - feature-qa-2025
+    types: [opened, synchronize, reopened]
+    
+permissions:
+  contents: read
+  id-token: write
+  issues: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      - name: Run Linting
+        run: npm run lint
+
+  format:
+    needs: lint
+    runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      - name: Check formatting of project files
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            npm run format:staged
+          else
+            npm run format
+          fi
+
+  build:
+    needs: format
+    runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      - name: Run build
+        run: npm run build
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      - name: Run Unit Test with Coverage
+        run: npm run test -- --coverage
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage
+
+  sonarqube:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download coverage reports
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage
+
+      - name: Install SonarScanner
+        run: npm install -g sonar-scanner
+
+      - name: Run SonarQube Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=MohammadHonor_mazdoor-ui \
+            -Dsonar.projectName=mazdoor-ui \
+            -Dsonar.projectVersion=1.0 \
+            -Dsonar.sources=. \
+            -Dsonar.tests=. \
+            -Dsonar.inclusions=**/*.js,**/*.jsx,**/*.ts,**/*.tsx \
+            -Dsonar.test.inclusions=**/*.test.ts,**/*.test.tsx,**/*.test.js,**/*.test.jsx \
+            -Dsonar.exclusions=**/*.config.ts,**/*.config.js,**/*.setup.ts,**/*.setup.js,**/components/ui/**/* \
+            -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
+            -Dsonar.sourceEncoding=UTF-8 \
+            -Dsonar.login=$SONAR_TOKEN \
+            -Dsonar.host.url=https://sonarcloud.io
+
+  dependabot-build:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+      - name: Run Linting
+        run: npm run lint
+      - name: Run Formatting
+        run: npm run format
+      - name: Run Unit Test with Coverage
+        run: npm run test
+      - name: Run build
+        run: npm run build
