@@ -3,10 +3,16 @@ name: Code Quality
 on:
   push:
     branches:
+      - production
       - feature-dev-2025
+      - feature-qa-2025
   pull_request:
+    branches:
+      - production
+      - feature-dev-2025
+      - feature-qa-2025
     types: [opened, synchronize, reopened]
-
+    
 permissions:
   contents: read
   id-token: write
@@ -120,7 +126,7 @@ jobs:
             -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \
             -Dsonar.sourceEncoding=UTF-8 \
             -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.host.url=https://your-sonarqube-server.com
+            -Dsonar.host.url=https://sonarcloud.io
 
   dependabot-build:
     runs-on: ubuntu-latest
