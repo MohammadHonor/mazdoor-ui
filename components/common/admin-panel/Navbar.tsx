@@ -4,23 +4,30 @@
 import { useState } from 'react';
 import { LogInIcon } from 'lucide-react';
 
+import { modalType } from '@/types/modal';
 import { Button } from '@/components/ui/button';
 import { Login } from '@/components/auth/Login';
+import { Register } from '@/components/auth/register/Register';
 
 interface NavbarProps {
   title: string;
 }
 
 export const Navbar = ({ title }: Readonly<NavbarProps>) => {
-  const [openModal, setOpenModal] = useState<boolean | undefined>(undefined);
+  const [modalType, setModalType] = useState<modalType>(null);
   const linkTitle = ['WHY MAZDOOR', 'Services', 'Mazdoor', 'Team', 'About Us'];
   const buttonTitle = ['Sign Up', 'Join'];
 
   const handleJoinAndSignupbutton = (title: string) => {
+    // console.log(title)
     if (title === 'Join') {
-      setOpenModal(true);
+      setModalType('join');
+    } else if (title === 'Sign Up') {
+      setModalType('signUp');
     }
   };
+
+  const closeModal = () => setModalType(null);
 
   return (
     <header className="flex h-16 items-end justify-between border pr-4 pl-8">
@@ -45,7 +52,8 @@ export const Navbar = ({ title }: Readonly<NavbarProps>) => {
           </Button>
         ))}
       </div>
-      {openModal && <Login openModal={openModal} setOpenModal={setOpenModal} />}
+      {modalType === 'join' && <Login openModal={true} setOpenModal={closeModal} />}
+      {modalType === 'signUp' && <Register openModal={true} setOpenModal={closeModal} />}
     </header>
   );
 };

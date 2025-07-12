@@ -34,12 +34,11 @@ export const ReusableInputField = ({ name, label, placeholder, type }: ReusableI
       control={control}
       name={name}
       render={({ field }) => (
-        <FormItem className="relative mt-6">
-          {/* Label placed on the top-left border */}
-          <FormLabel className="absolute -top-3 left-3 z-10 bg-white px-1 text-sm">{label}</FormLabel>
+        <FormItem className="flex flex-col gap-0.5">
+          <FormLabel className="text-sm">{label}</FormLabel>
 
           <FormControl>
-            <Input placeholder={placeholder} type={type} {...field} />
+            <Input placeholder={placeholder} type={type} {...field} className="rounded-[4px]" />
           </FormControl>
 
           <FormMessage />
