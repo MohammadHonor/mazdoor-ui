@@ -2,6 +2,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { LogInIcon } from 'lucide-react';
 
 import { modalType } from '@/types/modal';
@@ -15,6 +16,8 @@ interface NavbarProps {
 
 export const Navbar = ({ title }: Readonly<NavbarProps>) => {
   const [modalType, setModalType] = useState<modalType>(null);
+  const router = useRouter();
+  // const [isActivate, setIsActivate] = useState<boolean>(false);
   const linkTitle = ['WHY MAZDOOR', 'Services', 'Mazdoor', 'Team', 'About Us'];
   const buttonTitle = ['Sign Up', 'Join'];
 
@@ -27,14 +30,21 @@ export const Navbar = ({ title }: Readonly<NavbarProps>) => {
     }
   };
 
+  const handleNavigate = (title: string) => {
+    switch (title) {
+      case 'WHY MAZDOOR':
+        router.push('/home');
+    }
+  };
+
   const closeModal = () => setModalType(null);
 
   return (
-    <header className="flex h-16 items-end justify-between border pr-4 pl-8">
+    <header className="flex h-20 items-center justify-between border-b-1 bg-white/30 pr-4 pl-8 shadow-md backdrop-blur-md">
       <span className="text-3xl font-bold text-red-500">{title}</span>
       <div className="flex gap-8">
         {linkTitle.map((title: string, idx: number) => (
-          <Button variant="link" key={`index-${idx}`}>
+          <Button variant="link" key={`index-${idx}`} onClick={() => handleNavigate(title)}>
             {title}
           </Button>
         ))}
