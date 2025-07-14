@@ -1,14 +1,16 @@
 'use client';
 
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-
-import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const router = useRouter();
+  useEffect(() => {
+    router.push('/home');
+  }, []);
   return (
     <>
-      <Button onClick={() => router.push('/dashboard')}>go to dashboard</Button>
+      <h1>loading</h1>
     </>
   );
 }
