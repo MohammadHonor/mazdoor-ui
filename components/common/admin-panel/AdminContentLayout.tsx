@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 
 import { Navbar } from '@/components/common/admin-panel/Navbar';
 
+import { Footer } from './Footer';
+
 interface AdminContentLayoutProps {
   title: string;
   children: React.ReactNode;
@@ -24,6 +26,7 @@ export const AdminContentLayout = ({ title, children }: Readonly<AdminContentLay
         <Navbar title={title} />
       </div>
       <div className={`min-h-calc(100vh-${navbarHeight}) relative mt-20 border px-16`}>{children}</div>
+      <Footer />
     </div>
   );
 };
