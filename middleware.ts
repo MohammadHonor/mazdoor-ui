@@ -1,10 +1,25 @@
-// middleware.ts or middleware.js
+import { NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+export async function middleware(req: NextRequest) {
+  const secret = process.env.NEXTAUTH_SECRET;
 
-export function middleware(request: NextRequest) {
-  // Example logic
-  console.log('middleware');
+  console.log(secret);
+  const isToken = await getToken({ req, secret });
+  if (isToken) {
+    console.log('token allready exist ');
+  } else {
+    console.log(isToken);
+    console.log('token not exist');
+  }
+
+  if (!isToken) {
+    return NextResponse.redirect(new URL('/home', req.url));
+  }
+
   return NextResponse.next();
 }
+
+export const config = {
+  matcher: '/',
+};
