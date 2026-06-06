@@ -1,6 +1,5 @@
 
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useEffect } from "react";
 import { Input } from '@/components/ui/input';
 
 interface GeolocationProps {
@@ -58,7 +57,7 @@ export function Geolocation({ openModal, setOpenModal }: GeolocationProps) {
 // navigator.geolocation.getCurrentPosition((position,{enableHighaccuracy:true})=>{
 //   console.log(position.coords.latitude,position.coords.longitude)
 // })
-function success(position:any) {
+function success(position:GeolocationPosition) {
   console.log(position.coords.latitude, position.coords.longitude);
 }
 

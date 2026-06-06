@@ -1,12 +1,12 @@
 'use client';
 
 import React, { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 
-export function SessionLoader({ children }: { children: React.ReactNode }) {
+export function SessionLoader({ children }: Readonly<{ children: React.ReactNode }>) {
   const { data: session, status } = useSession();
-  const router = useRouter();
+  // const router = useRouter();
   useEffect(() => {
     if (status === 'loading') {
       console.log('loading');
@@ -16,6 +16,6 @@ export function SessionLoader({ children }: { children: React.ReactNode }) {
     } else {
       console.log('unauthenticate');
     }
-  }, [status, router]);
+  });
   return <>{children}</>;
 }
