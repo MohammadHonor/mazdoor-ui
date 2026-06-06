@@ -1,6 +1,6 @@
 import { AdminContentLayout } from '@/components/common/admin-panel/AdminContentLayout';
 
-export default function dashboard() {
+export default function MAzdoor() {
   return (
     <AdminContentLayout title="MAZDOOR">
       <h1>AdminContentLayout</h1>

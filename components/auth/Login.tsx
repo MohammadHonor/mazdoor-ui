@@ -1,5 +1,6 @@
 import React from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 
 import { loginSchema, LoginSchema } from '@/lib/validators/login.schema';
@@ -14,8 +15,6 @@ interface LoginProps {
 }
 
 export const Login: React.FC<LoginProps> = ({ openModal, setOpenModal }) => {
-  // const [openModal, setOpenModal] = useState<boolean>(true)
-
   const form = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -24,8 +23,21 @@ export const Login: React.FC<LoginProps> = ({ openModal, setOpenModal }) => {
     },
   });
 
-  const formHandler = (data: LoginSchema) => {
+  const formHandler = async (data: LoginSchema) => {
     console.log(data);
+    try {
+      const result = await signIn('credentials', {
+        ...data,
+        redirect: false,
+      });
+      if (result?.ok) {
+        console.log('login successfull');
+      } else {
+        console.log('login not success');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

@@ -1,31 +1,64 @@
-// import { API_ENDPOINTS } from '@/services/apiEndPoint';
-// import { MAZDOOR_BASE_URL } from '@/services/config';
-// import NextAuth from 'next-auth';
-// import Credentials from 'next-auth/providers/credentials';
-// import Email from 'next-auth/providers/email';
+import type { NextAuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
-// export const { handler, signIn, signOut, auth } = NextAuth({
-//   providers: [
-//     Credentials({
-//       credentials:{email:{} ,password:{}},
-//       authorize: async (credentials)=>{
+const mockUsers = [
+  {
+    id: '1',
+    name: 'Sharuf',
+    email: 'sharuf@example.com',
+    password: 'Msali@121',
+  },
+];
+export const authOptions: NextAuthOptions = {
+  providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        email: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        const user = mockUsers.find(
+          (user) => user.email === credentials?.email && user.password === credentials?.password,
+        );
 
-//         if(!credentials?.email || !credentials?.password){
-//           throw new Error("email and password are required")
-//         }
+        if (user) {
+          // Only return fields you want to expose to the session token
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          };
+        }
 
-//         try {
-//           const loginUrl=`${MAZDOOR_BASE_URL}${API_ENDPOINTS.LOGIN}`
-
-//           await fetch(loginUrl,{
-
-//           })
-
-//         } catch (error) {
-
-//         }
-
-//       }
-//     })
-//   ]
-// })
+        return null;
+      },
+    }),
+  ],
+  session: {
+    strategy: 'jwt',
+  },
+  pages: {
+    signIn: '/home',
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name ?? '';
+        token.email = user.email ?? '';
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (token && session.user) {
+        session.user.id = token.id;
+        session.user.name = token.name;
+        session.user.email = token.email;
+      }
+      return session;
+    },
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: true,
+};
