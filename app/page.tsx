@@ -9,8 +9,6 @@ export default function Home() {
     router.push('/home');
   }, []);
   return (
-    <>
       <h1>loading</h1>
-    </>
   );
 }
