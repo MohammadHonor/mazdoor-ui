@@ -1,6 +1,7 @@
 ## Little Color Management System (LCMS) v2.14
 
 ### LCMS License
+
 <pre>
 
 README.1ST file information
@@ -48,6 +49,7 @@ Users of this code must verify correctness for their application.
 </pre>
 
 ### AUTHORS File Information
+
 ```
 
 Main Author

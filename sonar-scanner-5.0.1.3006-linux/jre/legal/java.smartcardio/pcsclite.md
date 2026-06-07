@@ -1,6 +1,7 @@
 ## PC/SC Lite v1.9.5
 
 ### PC/SC Lite License
+
 <pre>
 
 The main parts of the code are using the BSD-like licence bellow:

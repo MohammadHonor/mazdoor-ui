@@ -1,6 +1,7 @@
 ## GIFLIB v5.2.1
 
 ### GIFLIB License
+
 ```
 
 The GIFLIB distribution is Copyright (c) 1997  Eric S. Raymond
@@ -28,3 +29,4 @@ https://sourceforge.net/p/giflib/code/ci/master/tree/openbsd-reallocarray.c
 
 Copyright (c) 2008 Otto Moerbeek <otto@drijf.net>
 SPDX-License-Identifier: MIT
+```
