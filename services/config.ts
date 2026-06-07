@@ -1,0 +1,1 @@
+export const MAZDOOR_BASE_URL = process.env.NEXT_PUBLIC_MAZDOOR_BASE_URL;
