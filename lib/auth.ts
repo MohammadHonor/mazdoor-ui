@@ -1,14 +1,7 @@
+import axios from 'axios';
 import type { NextAuthOptions } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-const mockUsers = [
-  {
-    id: '1',
-    name: 'Sharuf',
-    email: 'sharuf@example.com',
-    password: 'Msali@121',
-  },
-];
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -18,39 +11,45 @@ export const authOptions: NextAuthOptions = {
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
-        const user = mockUsers.find(
-          (user) => user.email === credentials?.email && user.password === credentials?.password,
-        );
-
-        if (user) {
-          // Only return fields you want to expose to the session token
-          return {
-            id: user.id,
-            name: user.name,
-            email: user.email,
-          };
+        try {
+          const user = await axios({
+            method: 'POST',
+            url: 'http://127.0.0.1:8000/mazdoor-api/v1/user/login',
+            data: {
+              email: credentials?.email,
+              password: credentials?.password,
+            },
+          });
+          console.log('user data', user);
+          if (user) {
+            return user.data;
+          }
+          return null;
+        } catch (error) {
+          console.log(error);
         }
-
-        return null;
       },
     }),
   ],
   session: {
     strategy: 'jwt',
+    maxAge: 2 * 60,
   },
   pages: {
     signIn: '/home',
+    error: '/error',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    jwt({ token, user }) {
+      // console.log("user", user);
       if (user) {
         token.id = user.id;
-        token.name = user.name ?? '';
+        token.username = user.name ?? '';
         token.email = user.email ?? '';
       }
       return token;
     },
-    async session({ session, token }) {
+    session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id;
         session.user.name = token.name;
@@ -60,5 +59,5 @@ export const authOptions: NextAuthOptions = {
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: true,
+  debug: false,
 };

@@ -1,9 +1,10 @@
 // import { title } from "process"
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { LogInIcon } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 
 import { modalType } from '@/types/modal';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,17 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ title }: Readonly<NavbarProps>) => {
+  const { status } = useSession();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      setIsAuthenticated(false);
+    } else if (status === 'authenticated') {
+      setIsAuthenticated(true);
+    }
+  }, [status]);
+  // console.log('isAuthenticated:', isAuthenticated);
+
   const [modalType, setModalType] = useState<modalType>(null);
   const router = useRouter();
   // const [isActivate, setIsActivate] = useState<boolean>(false);
@@ -40,7 +52,7 @@ export const Navbar = ({ title }: Readonly<NavbarProps>) => {
   const closeModal = () => setModalType(null);
 
   return (
-    <header className="flex h-20 items-center justify-between border-b-1 bg-white/30 pr-4 pl-8 shadow-md backdrop-blur-md">
+    <header className="flex h-20 items-center justify-between border-b bg-white/30 pr-4 pl-8 shadow-md backdrop-blur-md">
       <span className="text-3xl font-bold text-red-500">{title}</span>
       <div className="flex gap-8">
         {linkTitle.map((title: string, idx: number) => (
@@ -49,19 +61,21 @@ export const Navbar = ({ title }: Readonly<NavbarProps>) => {
           </Button>
         ))}
       </div>
-      <div className="flex gap-4">
-        {buttonTitle.map((title: string, idx: number) => (
-          <Button
-            className={`w-24 rounded-3xl border ${idx === 1 && 'bg-red-500 text-white'}`}
-            variant="ghost"
-            key={`index-${idx}`}
-            onClick={() => handleJoinAndSignupbutton(title)}
-          >
-            {title === 'Join' && <LogInIcon />}
-            {title}
-          </Button>
-        ))}
-      </div>
+      {!isAuthenticated && (
+        <div className="flex gap-4">
+          {buttonTitle.map((title: string, idx: number) => (
+            <Button
+              className={`w-24 rounded-3xl border ${idx === 1 && 'bg-red-500 text-white'}`}
+              variant="ghost"
+              key={`index-${idx}`}
+              onClick={() => handleJoinAndSignupbutton(title)}
+            >
+              {title === 'Join' && <LogInIcon />}
+              {title}
+            </Button>
+          ))}
+        </div>
+      )}
       {modalType === 'join' && <Login openModal={true} setOpenModal={closeModal} />}
       {modalType === 'signUp' && <Register openModal={true} setOpenModal={closeModal} />}
     </header>

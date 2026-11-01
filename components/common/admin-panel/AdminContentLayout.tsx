@@ -16,7 +16,7 @@ export const AdminContentLayout = ({ title, children }: Readonly<AdminContentLay
   useEffect(() => {
     const height = document.querySelector('header');
     if (height) {
-      console.log(height.offsetHeight);
+      // console.log(height.offsetHeight);
       setNavbarHeight(height.offsetHeight);
     }
   }, []);
