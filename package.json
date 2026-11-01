@@ -44,6 +44,7 @@
     "react-geolocated": "^4.4.0",
     "react-hook-form": "^7.60.0",
     "react-phone-input-2": "^2.15.1",
+    "shadcn": "^4.11.0",
     "tailwind-merge": "^3.3.1",
     "zod": "^3.25.74"
   },
