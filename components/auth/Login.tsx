@@ -24,7 +24,7 @@ export const Login: React.FC<LoginProps> = ({ openModal, setOpenModal }) => {
   });
 
   const formHandler = async (data: LoginSchema) => {
-    console.log(data);
+    console.log('login data ', data);
     try {
       const result = await signIn('credentials', {
         ...data,
@@ -32,6 +32,7 @@ export const Login: React.FC<LoginProps> = ({ openModal, setOpenModal }) => {
       });
       if (result?.ok) {
         console.log('login successfull');
+        setOpenModal(false);
       } else {
         console.log('login not success');
       }
@@ -64,9 +65,9 @@ export const Login: React.FC<LoginProps> = ({ openModal, setOpenModal }) => {
             <Button type="submit">CONTINUE</Button>
 
             <div className="flex h-9 items-center justify-center gap-4">
-              <hr className="flex-grow border border-black" />
+              <hr className="grow border border-black" />
               <span className="text-muted-foreground text-sm">Or continue</span>
-              <hr className="flex-grow border border-black" />
+              <hr className="grow border border-black" />
             </div>
 
             <div className="flex items-center justify-center">

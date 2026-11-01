@@ -11,7 +11,7 @@ import { ProfileCard } from '@/components/common/profileCard/ProfileCard';
 export default function dashboard() {
   return (
     <AdminContentLayout title="MAZDOOR">
-      <ProfileCard />
+      {/* <ProfileCard /> */}
       <MazdoorReason />
       <Services />
       <Mazdoor />
